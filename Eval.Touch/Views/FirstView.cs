@@ -102,11 +102,22 @@ namespace Eval.Touch.Views
             if (ViewModel.Images.Count == 0)
                 return;
 
+            Image<Bgr, byte> combinedImage = null;
             foreach (var scannedImage in ViewModel.Images)
             {
                 var im = Image<Bgr, byte>.FromRawImageData(scannedImage);
-                var w = im.Width;
+                if (null == combinedImage)
+                    combinedImage = new Image<Bgr, byte>(im.Width, im.Height);
+                for (int i = 0; i < im.Width; ++i)
+                    for (int j = 0; j < im.Height; ++j)
+                    {
+                        var val = im[j, i];
+                        val.Red /= 2;
+                        val.Blue /= 2;
+                        combinedImage[j,i] = val;
+                    }
             }
+            ViewModel.Bytes = combinedImage.ToJpegData();
         }
 
         void OnReadBarcode(BarCodeResult barcodeResult)
