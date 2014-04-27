@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eval.Core", "Eval.Core\Eval.Core.csproj", "{C868D36D-673D-4F3F-8BF6-769EEF2DD028}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eval.Touch", "Eval.Touch\Eval.Touch.csproj", "{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Ad-Hoc|Any CPU = Ad-Hoc|Any CPU
@@ -23,6 +25,38 @@ Global
 		Release|Mixed Platforms = Release|Mixed Platforms
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Ad-Hoc|Any CPU.ActiveCfg = Ad-Hoc|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Ad-Hoc|Any CPU.Build.0 = Ad-Hoc|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Ad-Hoc|iPhone.ActiveCfg = Ad-Hoc|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Ad-Hoc|iPhone.Build.0 = Ad-Hoc|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Ad-Hoc|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Ad-Hoc|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Ad-Hoc|Mixed Platforms.ActiveCfg = Ad-Hoc|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Ad-Hoc|Mixed Platforms.Build.0 = Ad-Hoc|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.AppStore|Any CPU.ActiveCfg = AppStore|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.AppStore|Any CPU.Build.0 = AppStore|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.AppStore|iPhone.ActiveCfg = AppStore|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.AppStore|iPhone.Build.0 = AppStore|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.AppStore|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.AppStore|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.AppStore|Mixed Platforms.ActiveCfg = AppStore|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.AppStore|Mixed Platforms.Build.0 = AppStore|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Debug|Any CPU.ActiveCfg = Debug|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Debug|Any CPU.Build.0 = Debug|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Debug|iPhone.ActiveCfg = Debug|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Debug|iPhone.Build.0 = Debug|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Debug|iPhoneSimulator.ActiveCfg = Debug|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Debug|iPhoneSimulator.Build.0 = Debug|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Debug|Mixed Platforms.ActiveCfg = Debug|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Debug|Mixed Platforms.Build.0 = Debug|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Release|Any CPU.ActiveCfg = Release|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Release|Any CPU.Build.0 = Release|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Release|iPhone.ActiveCfg = Release|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Release|iPhone.Build.0 = Release|iPhone
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Release|iPhoneSimulator.ActiveCfg = Release|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Release|iPhoneSimulator.Build.0 = Release|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Release|Mixed Platforms.ActiveCfg = Release|iPhoneSimulator
+		{10FFAE6E-9FC3-47D8-A80E-0E0193CB3C43}.Release|Mixed Platforms.Build.0 = Release|iPhoneSimulator
 		{C868D36D-673D-4F3F-8BF6-769EEF2DD028}.Ad-Hoc|Any CPU.ActiveCfg = Release|Any CPU
 		{C868D36D-673D-4F3F-8BF6-769EEF2DD028}.Ad-Hoc|Any CPU.Build.0 = Release|Any CPU
 		{C868D36D-673D-4F3F-8BF6-769EEF2DD028}.Ad-Hoc|iPhone.ActiveCfg = Release|Any CPU
@@ -47,6 +81,9 @@ Global
 		{C868D36D-673D-4F3F-8BF6-769EEF2DD028}.Release|iPhoneSimulator.ActiveCfg = Release|Any CPU
 		{C868D36D-673D-4F3F-8BF6-769EEF2DD028}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{C868D36D-673D-4F3F-8BF6-769EEF2DD028}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Eval.Touch\Eval.Touch.csproj
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
