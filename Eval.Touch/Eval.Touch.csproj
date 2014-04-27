@@ -115,6 +115,12 @@
     <Reference Include="Cirrious.MvvmCross.Localization">
       <HintPath>..\packages\MvvmCross.HotTuna.CrossCore.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.Localization.dll</HintPath>
     </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache">
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.DownloadCache.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.DownloadCache.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.DownloadCache.Touch">
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.DownloadCache.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.DownloadCache.Touch.dll</HintPath>
+    </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.Email">
       <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Email.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.Email.dll</HintPath>
     </Reference>
@@ -126,6 +132,12 @@
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.File.Touch">
       <HintPath>..\packages\MvvmCross.HotTuna.Plugin.File.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.File.Touch.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Network">
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Network.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.Network.dll</HintPath>
+    </Reference>
+    <Reference Include="Cirrious.MvvmCross.Plugins.Network.Touch">
+      <HintPath>..\packages\MvvmCross.HotTuna.Plugin.Network.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.Network.Touch.dll</HintPath>
     </Reference>
     <Reference Include="Cirrious.MvvmCross.Plugins.PictureChooser">
       <HintPath>..\packages\MvvmCross.HotTuna.Plugin.PictureChooser.3.1.1\lib\MonoTouch\Cirrious.MvvmCross.Plugins.PictureChooser.dll</HintPath>
@@ -157,8 +169,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrap\BarCodeScannerPluginBootstrap.cs" />
+    <Compile Include="Bootstrap\DownloadCachePluginBootstrap.cs" />
     <Compile Include="Bootstrap\EmailPluginBootstrap.cs" />
     <Compile Include="Bootstrap\FilePluginBootstrap.cs" />
+    <Compile Include="Bootstrap\NetworkPluginBootstrap.cs" />
     <Compile Include="Bootstrap\PictureChooserPluginBootstrap.cs" />
     <Compile Include="DebugTrace.cs" />
     <Compile Include="LinkerPleaseInclude.cs" />
