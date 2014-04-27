@@ -129,11 +129,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppDelegate.cs" />
-    <Content Include="ToDo-MvvmCross\_ Touch UI.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Eval.Core\Eval.Core.csproj">
-      <Project>{c868d36d-673d-4f3f-8bf6-769eef2dd028}</Project>
+      <Project>{C868D36D-673D-4F3F-8BF6-769EEF2DD028}</Project>
       <Name>Eval.Core</Name>
     </ProjectReference>
   </ItemGroup>
