@@ -9,6 +9,9 @@ using Acr.MvvmCross.Plugins.BarCodeScanner;
 using Eval.Core.ViewModels;
 using Emgu.CV;
 using Emgu.CV.Structure;
+using MonoTouch.MessageUI;
+using System.Threading.Tasks;
+using System.Collections.Generic;
 
 namespace Eval.Touch.Views
 {
@@ -22,6 +25,8 @@ namespace Eval.Touch.Views
                 return base.ViewModel as FirstViewModel;
             }
         }
+
+        UIActivityIndicatorView _activitySpinner;
 
         public override void ViewDidLoad()
         {
@@ -46,7 +51,7 @@ namespace Eval.Touch.Views
 
             var takePicButton = new UIButton(UIButtonType.System);
             takePicButton.Frame = new RectangleF(10, y, 300, 40);
-            takePicButton.SetTitle("Take Pictures", UIControlState.Normal);
+            takePicButton.SetTitle("Take Picture", UIControlState.Normal);
             View.AddSubview(takePicButton);
 
             y += h + 5;
@@ -67,6 +72,14 @@ namespace Eval.Touch.Views
 
             y += h + 5;
 
+            var sendButton = new UIButton(UIButtonType.System);
+            sendButton.Frame = new RectangleF(10, y, 300, 40);
+            sendButton.SetTitle("Send Result", UIControlState.Normal);
+            sendButton.TouchDown += HandleSend;
+            View.AddSubview(sendButton);
+
+            y += h + 5;
+
             var picturesLabel = new UILabel(new RectangleF(10, y, 300, h));
             View.AddSubview(picturesLabel);
 
@@ -77,9 +90,15 @@ namespace Eval.Touch.Views
 
             y += h + 5;
 
-            w = UIScreen.MainScreen.Bounds.Width - 2 * x;
-            h = UIScreen.MainScreen.Bounds.Height - 2 * x;
-            var uiImageView = new UIImageView(new RectangleF(x, y, w, h));
+            _activitySpinner = new UIActivityIndicatorView(UIActivityIndicatorViewStyle.Gray);
+            _activitySpinner.Frame = new RectangleF(UIScreen.MainScreen.Bounds.Width / 2 - _activitySpinner.Frame.Width/2, y, _activitySpinner.Frame.Width, _activitySpinner.Frame.Height);
+            //_activitySpinner.AutoresizingMask = UIViewAutoresizing.FlexibleMargins;
+            View.AddSubview(_activitySpinner);
+            y += _activitySpinner.Frame.Height + 5;
+
+            w = UIScreen.MainScreen.Bounds.Width - 20;
+            h = w * 1.5f;
+            var uiImageView = new UIImageView(new RectangleF(10, y, w, h));
             View.AddSubview(uiImageView);
 
             var set = this.CreateBindingSet<FirstView, Core.ViewModels.FirstViewModel>();
@@ -102,28 +121,54 @@ namespace Eval.Touch.Views
             if (ViewModel.Images.Count == 0)
                 return;
 
+            _activitySpinner.StartAnimating();
+            Task.Factory.StartNew(() => CombineTask());
+        }
+
+        void CombineTask()
+        {
             Image<Bgr, byte> combinedImage = null;
+            var images = new List<Image<Bgr, byte>>();
             foreach (var scannedImage in ViewModel.Images)
-            {
-                var im = Image<Bgr, byte>.FromRawImageData(scannedImage);
-                if (null == combinedImage)
-                    combinedImage = new Image<Bgr, byte>(im.Width, im.Height);
-                for (int i = 0; i < im.Width; ++i)
-                    for (int j = 0; j < im.Height; ++j)
+                images.Add(Image<Bgr, byte>.FromRawImageData(scannedImage));
+            combinedImage = new Image<Bgr, byte>(images[0].Width, images[0].Height);
+            for (int i = 0; i < combinedImage.Width; ++i)
+                for (int j = 0; j < combinedImage.Height; ++j)
+                {
+                    double blue = 0, green = 0, red = 0;
+                    foreach (var im in images)
                     {
                         var val = im[j, i];
-                        val.Red /= 2;
-                        val.Blue /= 2;
-                        combinedImage[j,i] = val;
+                        blue += val.Blue;
+                        green += val.Green;
+                        red += val.Red;
                     }
-            }
+                    combinedImage[j,i] = new Bgr(blue/images.Count, green/images.Count, red/images.Count);
+                }
             ViewModel.Bytes = combinedImage.ToJpegData();
+
+            InvokeOnMainThread( () => _activitySpinner.StopAnimating());
         }
 
         void OnReadBarcode(BarCodeResult barcodeResult)
         {
             if(barcodeResult.Success)
                 ViewModel.BarcodeResult = barcodeResult.Code;
+        }
+
+        void HandleSend(object sender, System.EventArgs eventArgs)
+        {
+            var mail = new MFMailComposeViewController();
+            var body = string.Format("Images");
+            mail.SetMessageBody(body, false);
+            mail.SetSubject("Results");
+            mail.SetToRecipients(new[] {"roman@rumble.me"});
+            int i = 0;
+            foreach(var im in ViewModel.Images)
+                mail.AddAttachmentData(NSData.FromArray(im), "image/jpg", string.Format("im{0}.jpg", ++i));
+            mail.AddAttachmentData(NSData.FromArray(ViewModel.Bytes), "image/jpg", "combined.jpg");
+            mail.Finished += (s, e) => (s as UIViewController).DismissViewController(true, () => { });
+            PresentViewController(mail, true, null);
         }
     }
 }

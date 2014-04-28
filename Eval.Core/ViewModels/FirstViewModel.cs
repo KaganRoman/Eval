@@ -77,8 +77,13 @@ namespace Eval.Core.ViewModels
 
         void TakePicture()
         {
-            _pictureChooserTask = Mvx.Resolve<IMvxPictureChooserTask>();
-            _pictureChooserTask.TakePicture(400, 100, OnPicture, () => { });
+            try
+            {
+                _pictureChooserTask.TakePicture(400, 100, OnPicture, () => { });
+            }
+            catch(Exception)
+            {
+            }
         }
 
         void OnPicture(System.IO.Stream pictureStream)
