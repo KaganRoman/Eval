@@ -159,7 +159,7 @@ namespace Eval.Touch.Views
         void HandleSend(object sender, System.EventArgs eventArgs)
         {
             var mail = new MFMailComposeViewController();
-            var body = string.Format("Images");
+            var body = string.Format("QR Code: {0}\r\nImages", ViewModel.BarcodeResult);
             mail.SetMessageBody(body, false);
             mail.SetSubject("Results");
             mail.SetToRecipients(new[] {"roman@rumble.me"});
