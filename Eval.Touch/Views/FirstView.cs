@@ -166,7 +166,8 @@ namespace Eval.Touch.Views
             int i = 0;
             foreach(var im in ViewModel.Images)
                 mail.AddAttachmentData(NSData.FromArray(im), "image/jpg", string.Format("im{0}.jpg", ++i));
-            mail.AddAttachmentData(NSData.FromArray(ViewModel.Bytes), "image/jpg", "combined.jpg");
+            if(ViewModel.Bytes != null)
+                mail.AddAttachmentData(NSData.FromArray(ViewModel.Bytes), "image/jpg", "combined.jpg");
             mail.Finished += (s, e) => (s as UIViewController).DismissViewController(true, () => { });
             PresentViewController(mail, true, null);
         }
