@@ -136,21 +136,19 @@ namespace Eval.Touch.Views
 				var response = await webClient.GetAsync (@"https://dl.dropboxusercontent.com/s/2ysz7o08e53gb1o/diamond_demo.jpg");
 				var certImageBytes = await response.Content.ReadAsByteArrayAsync();
 
+				var scannedImages = ViewModel.Images;
 				Image<Bgr, byte> certImage = Image<Bgr, byte>.FromRawImageData(certImageBytes);
-				var resizedImages = new List<Image<Bgr, byte>>();
 				Image<Bgr, byte> combinedImage = null;
-				foreach (var scannedImage in ViewModel.Images)
+				foreach (var scannedImage in scannedImages)
 				{
 					var im = Image<Bgr, byte>.FromRawImageData(scannedImage);
-					double resizeScale = (certImage.Width * 1.0f / ViewModel.Images.Count) / im.Width;
+					double resizeScale = (certImage.Width * 1.0f / scannedImages.Count) / im.Width;
 					var resizedImage = im.Resize(resizeScale, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
-					resizedImages.Add(resizedImage);
 					if(null == combinedImage)
 						combinedImage = resizedImage;
 					else
 						combinedImage = combinedImage.ConcateHorizontal(resizedImage);
 				}
-
 				combinedImage = combinedImage.ConcateVertical(certImage);
 
 				ViewModel.Bytes = combinedImage.ToJpegData();
