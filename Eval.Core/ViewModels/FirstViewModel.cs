@@ -86,7 +86,7 @@ namespace Eval.Core.ViewModels
         {
             try
             {
-                _pictureChooserTask.TakePicture(400, 100, OnPicture, () => { });
+				_pictureChooserTask.TakePicture(800, 100, OnPicture, () => { });
             }
             catch(Exception)
             {

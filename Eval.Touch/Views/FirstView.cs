@@ -120,8 +120,8 @@ namespace Eval.Touch.Views
 
 		async void HandleCombine (object sender, System.EventArgs e)
         {
-			// if (ViewModel.Images.Count == 0)
-			//  return;
+			if (ViewModel.Images.Count == 0)
+				return;
 
             _activitySpinner.StartAnimating();
 			await CombineTask();
@@ -133,13 +133,25 @@ namespace Eval.Touch.Views
 			try
 			{
 				var webClient = new HttpClient ();
-				var response = await webClient.GetAsync (@"http://upload.wikimedia.org/wikipedia/commons/2/22/Turkish_Van_Cat.jpg");
-				var certImage = await response.Content.ReadAsByteArrayAsync();
+				var response = await webClient.GetAsync (@"https://dl.dropboxusercontent.com/s/2ysz7o08e53gb1o/diamond_demo.jpg");
+				var certImageBytes = await response.Content.ReadAsByteArrayAsync();
 
-				Image<Bgr, byte> combinedImage = Image<Bgr, byte>.FromRawImageData(certImage);
-				var images = new List<Image<Bgr, byte>>();
+				Image<Bgr, byte> certImage = Image<Bgr, byte>.FromRawImageData(certImageBytes);
+				var resizedImages = new List<Image<Bgr, byte>>();
+				Image<Bgr, byte> combinedImage = null;
 				foreach (var scannedImage in ViewModel.Images)
-					images.Add(Image<Bgr, byte>.FromRawImageData(scannedImage));
+				{
+					var im = Image<Bgr, byte>.FromRawImageData(scannedImage);
+					double resizeScale = (certImage.Width * 1.0f / ViewModel.Images.Count) / im.Width;
+					var resizedImage = im.Resize(resizeScale, Emgu.CV.CvEnum.INTER.CV_INTER_CUBIC);
+					resizedImages.Add(resizedImage);
+					if(null == combinedImage)
+						combinedImage = resizedImage;
+					else
+						combinedImage = combinedImage.ConcateHorizontal(resizedImage);
+				}
+
+				combinedImage = combinedImage.ConcateVertical(certImage);
 
 				ViewModel.Bytes = combinedImage.ToJpegData();
 			}
