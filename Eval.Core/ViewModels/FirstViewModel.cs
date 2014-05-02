@@ -22,6 +22,13 @@ namespace Eval.Core.ViewModels
             get { return _takePicture = _takePicture ?? new MvxCommand(TakePicture); }
         }
 
+		private byte[] _downloadedImage;
+		public byte[] DownloadedImage
+		{
+			get { return _downloadedImage; }
+			set { _downloadedImage = value; RaisePropertyChanged(() => DownloadedImage); }
+		}
+
         private byte[] _bytes;
         public byte[] Bytes
         {

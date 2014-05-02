@@ -12,6 +12,8 @@ using Emgu.CV.Structure;
 using MonoTouch.MessageUI;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Net.Http;
+using System;
 
 namespace Eval.Touch.Views
 {
@@ -116,38 +118,33 @@ namespace Eval.Touch.Views
             Mvx.Resolve<IBarCodeScanner>().Read(OnReadBarcode);
         }
 
-        void HandleCombine (object sender, System.EventArgs e)
+		async void HandleCombine (object sender, System.EventArgs e)
         {
-            if (ViewModel.Images.Count == 0)
-                return;
+			// if (ViewModel.Images.Count == 0)
+			//  return;
 
             _activitySpinner.StartAnimating();
-            Task.Factory.StartNew(() => CombineTask());
+			await CombineTask();
+			_activitySpinner.StopAnimating ();
         }
 
-        void CombineTask()
+		async Task CombineTask()
         {
-            Image<Bgr, byte> combinedImage = null;
-            var images = new List<Image<Bgr, byte>>();
-            foreach (var scannedImage in ViewModel.Images)
-                images.Add(Image<Bgr, byte>.FromRawImageData(scannedImage));
-            combinedImage = new Image<Bgr, byte>(images[0].Width, images[0].Height);
-            for (int i = 0; i < combinedImage.Width; ++i)
-                for (int j = 0; j < combinedImage.Height; ++j)
-                {
-                    double blue = 0, green = 0, red = 0;
-                    foreach (var im in images)
-                    {
-                        var val = im[j, i];
-                        blue += val.Blue;
-                        green += val.Green;
-                        red += val.Red;
-                    }
-                    combinedImage[j,i] = new Bgr(blue/images.Count, green/images.Count, red/images.Count);
-                }
-            ViewModel.Bytes = combinedImage.ToJpegData();
+			try
+			{
+				var webClient = new HttpClient ();
+				var response = await webClient.GetAsync (@"http://upload.wikimedia.org/wikipedia/commons/2/22/Turkish_Van_Cat.jpg");
+				var certImage = await response.Content.ReadAsByteArrayAsync();
 
-            InvokeOnMainThread( () => _activitySpinner.StopAnimating());
+				Image<Bgr, byte> combinedImage = Image<Bgr, byte>.FromRawImageData(certImage);
+				var images = new List<Image<Bgr, byte>>();
+				foreach (var scannedImage in ViewModel.Images)
+					images.Add(Image<Bgr, byte>.FromRawImageData(scannedImage));
+
+				ViewModel.Bytes = combinedImage.ToJpegData();
+			}
+			catch(Exception e) {
+			}
         }
 
         void OnReadBarcode(BarCodeResult barcodeResult)
