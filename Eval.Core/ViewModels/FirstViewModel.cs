@@ -63,6 +63,32 @@ namespace Eval.Core.ViewModels
             set { _images = value; RaisePropertyChanged(() => Images); } 
         }
 
+		private float[] _whiteBCoeffs = new float[] { 1.0f, 1.0f, 1.0f };
+		public float RCoeff 
+		{ 	get { return _whiteBCoeffs[0]; } 
+			set 
+			{
+				_whiteBCoeffs[0] = value;
+				RaisePropertyChanged (() => RCoeff);
+			} 
+		}
+		public float GCoeff 
+		{ 	get { return _whiteBCoeffs[1]; } 
+			set 
+			{
+				_whiteBCoeffs[1] = value;
+				RaisePropertyChanged (() => RCoeff);
+			} 
+		}
+		public float BCoeff 
+		{ 	get { return _whiteBCoeffs[2]; } 
+			set 
+			{
+				_whiteBCoeffs[2] = value;
+				RaisePropertyChanged (() => RCoeff);
+			} 
+		}
+
         private IMvxPictureChooserTask _pictureChooserTask;
 
         private readonly int PICTURES_N = 3;

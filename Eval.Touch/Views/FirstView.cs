@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Net.Http;
 using System;
+using MonoTouch.CoreGraphics;
 
 namespace Eval.Touch.Views
 {
@@ -37,6 +38,9 @@ namespace Eval.Touch.Views
             View = view;
 
             base.ViewDidLoad();
+
+			var tapper = new UITapGestureRecognizer (DismissKeyboard);
+			View.AddGestureRecognizer (tapper);
 
 			// ios7 layout
             if (RespondsToSelector(new Selector("edgesForExtendedLayout")))
@@ -80,6 +84,30 @@ namespace Eval.Touch.Views
             sendButton.TouchDown += HandleSend;
             View.AddSubview(sendButton);
 
+			y += h + 15;
+
+			var rCoeff = new UITextField (new RectangleF (20, y, 50, 25));
+			rCoeff.Layer.BorderWidth = 1;
+			rCoeff.Layer.BorderColor = UIColor.Blue.CGColor;
+			rCoeff.TextAlignment = UITextAlignment.Center;
+			rCoeff.AdjustsFontSizeToFitWidth = true;
+			rCoeff.KeyboardType = UIKeyboardType.NumbersAndPunctuation;
+			var gCoeff = new UITextField (new RectangleF (130, y, 50, 25));
+			gCoeff.Layer.BorderWidth = 1;
+			gCoeff.Layer.BorderColor = UIColor.Blue.CGColor;
+			gCoeff.TextAlignment = UITextAlignment.Center;
+			gCoeff.AdjustsFontSizeToFitWidth = true;
+			gCoeff.KeyboardType = UIKeyboardType.NumbersAndPunctuation;
+			var bCoeff = new UITextField (new RectangleF (240, y, 50, 25));
+			bCoeff.Layer.BorderWidth = 1;
+			bCoeff.Layer.BorderColor = UIColor.Blue.CGColor;
+			bCoeff.TextAlignment = UITextAlignment.Center;
+			bCoeff.AdjustsFontSizeToFitWidth = true;
+			bCoeff.KeyboardType = UIKeyboardType.NumbersAndPunctuation;
+			View.AddSubview (rCoeff);
+			View.AddSubview (gCoeff);
+			View.AddSubview (bCoeff);
+
             y += h + 5;
 
             var picturesLabel = new UILabel(new RectangleF(10, y, 300, h));
@@ -108,7 +136,10 @@ namespace Eval.Touch.Views
             set.Bind(picturesLabel).To(vm => vm.PicturesStatus);
             set.Bind(takePicButton).To(vm => vm.TakePictureCommand);
             set.Bind(resetButton).To(vm => vm.ClearCommand);
-            set.Bind(uiImageView).To(vm => vm.Bytes).WithConversion("InMemoryImage");
+			set.Bind(uiImageView).To(vm => vm.Bytes).WithConversion("InMemoryImage");
+			set.Bind(rCoeff).To(vm => vm.RCoeff);
+			set.Bind(gCoeff).To(vm => vm.GCoeff);
+			set.Bind(bCoeff).To(vm => vm.BCoeff);
 
             set.Apply();
         }
@@ -151,6 +182,16 @@ namespace Eval.Touch.Views
 				}
 				combinedImage = combinedImage.ConcateVertical(certImage);
 
+				for (int i = 0; i < combinedImage.Width; ++i)
+					for (int j = 0; j < combinedImage.Height; ++j)
+					{
+						var val = combinedImage[j, i];
+						val.Red *= ViewModel.RCoeff;
+						val.Green *= ViewModel.GCoeff;
+						val.Blue *= ViewModel.BCoeff;
+						combinedImage[j, i] = val;
+					}
+
 				ViewModel.Bytes = combinedImage.ToJpegData();
 			}
 			catch(Exception e) {
@@ -178,5 +219,11 @@ namespace Eval.Touch.Views
             mail.Finished += (s, e) => (s as UIViewController).DismissViewController(true, () => { });
             PresentViewController(mail, true, null);
         }
+
+		void DismissKeyboard()
+		{
+			foreach (var v in View.Subviews)
+				v.ResignFirstResponder ();
+		}
     }
 }

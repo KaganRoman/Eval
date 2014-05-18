@@ -169,9 +169,6 @@
     <Reference Include="System.Windows">
       <HintPath>..\packages\MvvmCross.PortableSupport.3.1.1\lib\MonoMac\System.Windows.dll</HintPath>
     </Reference>
-    <Reference Include="Eval.Core">
-      <HintPath>..\Bin\Eval.Core.dll</HintPath>
-    </Reference>
     <Reference Include="TestFlight">
       <HintPath>..\packages\TestFlight.dll</HintPath>
     </Reference>
@@ -203,10 +200,6 @@
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.MonoTouch.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\Eval.Core\Eval.Core.csproj">
-      <Project>{C868D36D-673D-4F3F-8BF6-769EEF2DD028}</Project>
-      <Name>Eval.Core</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Emgu.CV\Emgu.CV.MonoTouch.csproj">
       <Project>{53F56A65-CDA9-49C2-A9BD-316EA18AEB49}</Project>
       <Name>Emgu.CV.MonoTouch</Name>
@@ -214,6 +207,10 @@
     <ProjectReference Include="..\Emgu.Util\Emgu.Util.MonoTouch.csproj">
       <Project>{317AF9CE-1B65-47A2-B142-BE556A312C72}</Project>
       <Name>Emgu.Util.MonoTouch</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Eval.Core\Eval.Core.csproj">
+      <Project>{C868D36D-673D-4F3F-8BF6-769EEF2DD028}</Project>
+      <Name>Eval.Core</Name>
     </ProjectReference>
   </ItemGroup>
 </Project>
