@@ -63,7 +63,7 @@ namespace Eval.Core.ViewModels
             set { _images = value; RaisePropertyChanged(() => Images); } 
         }
 
-		private float[] _whiteBCoeffs = new float[] { 1.0f, 1.0f, 1.0f };
+		private float[] _whiteBCoeffs = new float[] { 0.9305f, 0.876f, 1.0f };
 		public float RCoeff 
 		{ 	get { return _whiteBCoeffs[0]; } 
 			set 

@@ -25,5 +25,10 @@ namespace Eval.Touch
 			
 			return true;
 		}
+
+		public override UIInterfaceOrientationMask GetSupportedInterfaceOrientations (UIApplication application, UIWindow forWindow)
+		{
+			return UIInterfaceOrientationMask.Portrait;
+		}
 	}
 }

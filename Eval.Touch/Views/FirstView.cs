@@ -155,17 +155,22 @@ namespace Eval.Touch.Views
 				return;
 
             _activitySpinner.StartAnimating();
-			await CombineTask();
+			await Task.Factory.StartNew(CombineTask);
 			_activitySpinner.StopAnimating ();
         }
 
-		async Task CombineTask()
+		void CombineTask()
         {
 			try
 			{
 				var webClient = new HttpClient ();
-				var response = await webClient.GetAsync (@"https://dl.dropboxusercontent.com/s/2ysz7o08e53gb1o/diamond_demo.jpg");
-				var certImageBytes = await response.Content.ReadAsByteArrayAsync();
+				//	var response = await webClient.GetAsync (@"https://dl.dropboxusercontent.com/s/2ysz7o08e53gb1o/diamond_demo.jpg");
+				//var certImageBytes = await response.Content.ReadAsByteArrayAsync();
+				byte[] certImageBytes = null;
+				using (NSData imageData = UIImage.FromBundle("diamond_demo-2.jpg").AsJPEG(1.0f)) {
+					certImageBytes = new byte[imageData.Length];
+					System.Runtime.InteropServices.Marshal.Copy(imageData.Bytes, certImageBytes, 0, Convert.ToInt32(imageData.Length));
+				}
 
 				var scannedImages = ViewModel.Images;
 				Image<Bgr, byte> certImage = Image<Bgr, byte>.FromRawImageData(certImageBytes);
@@ -180,22 +185,41 @@ namespace Eval.Touch.Views
 					else
 						combinedImage = combinedImage.ConcateHorizontal(resizedImage);
 				}
-				combinedImage = combinedImage.ConcateVertical(certImage);
 
+				int percent = 0;
 				for (int i = 0; i < combinedImage.Width; ++i)
+				{
 					for (int j = 0; j < combinedImage.Height; ++j)
 					{
+						combinedImage.Data[j, i, 0] = (byte)(combinedImage.Data[j, i, 0]*ViewModel.RCoeff);
+						combinedImage.Data[j, i, 1] = (byte)(combinedImage.Data[j, i, 1]*ViewModel.GCoeff);
+						combinedImage.Data[j, i, 2] = (byte)(combinedImage.Data[j, i, 2]*ViewModel.BCoeff);
+
+						/*
 						var val = combinedImage[j, i];
 						val.Red *= ViewModel.RCoeff;
 						val.Green *= ViewModel.GCoeff;
 						val.Blue *= ViewModel.BCoeff;
 						combinedImage[j, i] = val;
+						*/
+
 					}
+					if(percent != (100*i)/combinedImage.Width)
+					{
+						percent = (100*i)/combinedImage.Width;
+						ViewModel.PicturesStatus = string.Format("Combined {0}%", percent);
+						if((percent + 3)%4 == 0)
+							ViewModel.Bytes = combinedImage.ToJpegData();
+					}
+				}
+
+				combinedImage = combinedImage.ConcateVertical(certImage);
 
 				ViewModel.Bytes = combinedImage.ToJpegData();
 			}
 			catch(Exception e) {
 			}
+			ViewModel.PicturesStatus = string.Format("Done");
         }
 
         void OnReadBarcode(BarCodeResult barcodeResult)
