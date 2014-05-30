@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using System;
 using MonoTouch.CoreGraphics;
+using System.Linq;
 
 namespace Eval.Touch.Views
 {
@@ -186,32 +187,38 @@ namespace Eval.Touch.Views
 						combinedImage = combinedImage.ConcateHorizontal(resizedImage);
 				}
 
-				int percent = 0;
-				for (int i = 0; i < combinedImage.Width; ++i)
+				int completed = 0, currentProgress = 0;
+				var data = combinedImage.Data;
+				int step = 10;
+				Parallel.ForEach(Enumerable.Range(0, combinedImage.Width/step).Select(t => t*step), (int bulk) =>
 				{
-					for (int j = 0; j < combinedImage.Height; ++j)
+					foreach(var i in Enumerable.Range(bulk, step))
 					{
-						combinedImage.Data[j, i, 0] = (byte)(combinedImage.Data[j, i, 0]*ViewModel.RCoeff);
-						combinedImage.Data[j, i, 1] = (byte)(combinedImage.Data[j, i, 1]*ViewModel.GCoeff);
-						combinedImage.Data[j, i, 2] = (byte)(combinedImage.Data[j, i, 2]*ViewModel.BCoeff);
+						foreach (var j in Enumerable.Range(0, combinedImage.Height))
+						{
+								data[j, i, 0] = (byte)(data[j, i, 0]*ViewModel.RCoeff);
+								data[j, i, 1] = (byte)(data[j, i, 1]*ViewModel.GCoeff);
+								data[j, i, 2] = (byte)(data[j, i, 2]*ViewModel.BCoeff);
 
-						/*
-						var val = combinedImage[j, i];
-						val.Red *= ViewModel.RCoeff;
-						val.Green *= ViewModel.GCoeff;
-						val.Blue *= ViewModel.BCoeff;
-						combinedImage[j, i] = val;
-						*/
+							/*
+							var val = combinedImage[j, i];
+							val.Red *= ViewModel.RCoeff;
+							val.Green *= ViewModel.GCoeff;
+							val.Blue *= ViewModel.BCoeff;
+							combinedImage[j, i] = val;
+							*/
 
+						}
 					}
-					if(percent != (100*i)/combinedImage.Width)
+					completed += step;
+					if(currentProgress != (100*completed)/combinedImage.Width)
 					{
-						percent = (100*i)/combinedImage.Width;
-						ViewModel.PicturesStatus = string.Format("Combined {0}%", percent);
-						if((percent + 3)%4 == 0)
+						currentProgress = (100*completed)/combinedImage.Width;
+						ViewModel.PicturesStatus = string.Format("Combined {0}%", currentProgress);
+						if(currentProgress%10 == 0 && currentProgress > 5 && currentProgress < 95)
 							ViewModel.Bytes = combinedImage.ToJpegData();
 					}
-				}
+				});
 
 				combinedImage = combinedImage.ConcateVertical(certImage);
 
